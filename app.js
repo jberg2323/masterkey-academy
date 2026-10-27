@@ -24,8 +24,14 @@ async function copy(text) {
 }
 const csvCell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
 
+// ---------- config: edit these ----------
+const LEAD_EMAIL = 'jeremy@ctox.com';            // where "get a CTO" requests are emailed
+const BOOKING_URL = '';                           // paste a Calendly / Google booking link to show a "Book now" button
+const LEAD_ENDPOINT = 'https://formsubmit.co/ajax/' + LEAD_EMAIL;
+let ROUTE_Q = new URLSearchParams();
+
 // ---------- content ----------
-const ROLE_NAMES = {sponsor:'Executive sponsor', admin:'Masterkey admin', owner:'Process owner', sfadmin:'Salesforce admin', champion:'Champion', user:'End user'};
+const ROLE_NAMES = {sponsor:'Executive sponsor', admin:'Masterkey admin', owner:'Process owner', sfadmin:'Salesforce admin', champion:'Champion', user:'End user', withcto:'Working with a CTO'};
 const LESSONS = [
   {id:'welcome', group:'Start here', title:'Welcome', tpl:'t-welcome', kind:'page'},
   {id:'roles', group:'Start here', title:'Who does what', tpl:'t-roles', time:'5 min', for:['all'],
@@ -37,6 +43,15 @@ const LESSONS = [
       {q:'How many champions should you have?', o:['One per company','One per 10 users','One per team lead','One per agent'], a:1, why:'One respected doer per 10 users.'},
       {q:'When must every role be assigned by name?', o:['Before Module 0 starts','After the first report','At go-live','At day 30'], a:0, why:'Assign every role by name before Module 0 starts.'}]},
   {id:'plan', group:'Start here', title:'Your rollout plan', tpl:'t-plan', kind:'tool'},
+  {id:'paths', group:'Start here', title:'DIY or with a CTO?', tpl:'t-paths', kind:'tool'},
+  {id:'ctoled', group:'With a CTO', title:'Rolling out with a CTO', tpl:'t-ctoled', time:'10 min', for:['withcto','sponsor'],
+    plain:'An experienced CTO does the technical parts of the rollout with you: connecting tools, scoring the report, building and testing agents. You still own the goal, the people and the decisions.',
+    outcome:'a clear split of who does what, and what to bring to your first CTO call.',
+    tasks:['Request your <a href="#expert?from=ctoled">free 30-minute CTO call</a>', 'Name your executive sponsor and Masterkey admin in <a href="#plan">Your rollout plan</a>', 'Write your goal with a number and a date', 'List the tools the workflow runs on and who can grant admin access', 'If you\'ve run a scan, have the Time Scout Report open for the call'],
+    quiz:[
+      {q:'In a CTO-led rollout, who owns the goal and approves each agent?', o:['The CTO','Your executive sponsor','Masterkey','Salesforce'], a:1, why:'The CTO does the technical work; your sponsor still owns the goal and the go/no-go on every agent.'},
+      {q:'What should you bring to the first CTO call?', o:['Nothing; the CTO figures it out','Your goal with a number, the workflow, its tools and who can grant access','A finished agent','Your Salesforce password'], a:1, why:'Those four things let the CTO size the work in 30 minutes. Never share passwords; you grant access yourself.'}]},
+  {id:'expert', group:'With a CTO', title:'Get a free CTO call', tpl:'t-expert', kind:'tool'},
   {id:'m0', group:'The 5 modules', title:'Module 0 — Setup', tpl:'t-m0', time:'Under 1 hour', for:['sponsor','admin'],
     plain:'Decide exactly what you want to fix and how you\'ll measure it, tell your team, then create your Masterkey account and connect only the tools that workflow uses.',
     outcome:'an account, the right tools connected, a written scope, and a team that knows what\'s happening.',
@@ -130,7 +145,8 @@ const ROLES = [
   {id:'owner', who:'Department head. Confirms findings and signs off agent rules.', time:'about 3 hours', req:['roles','m1','m2','m3','m4']},
   {id:'sfadmin', who:'Runs Agentforce: permissions, testing, deploy.', time:'about 4 hours', req:['roles','m3','gov']},
   {id:'champion', who:'Respected team member who coaches peers. 1 per 10 users.', time:'about 2 hours', req:['roles','m2','m4','trouble']},
-  {id:'user', who:'Uses an agent day to day and flags mistakes.', time:'about 45 minutes', req:['m4','trouble']}
+  {id:'user', who:'Uses an agent day to day and flags mistakes.', time:'about 45 minutes', req:['m4','trouble']},
+  {id:'withcto', who:'A CTO runs the technical work; you own the goal and decisions.', time:'about 1 hour', req:['roles','ctoled','m0','m2','m4','measure']}
 ];
 const GLOSSARY = [
   ['Agent','A piece of AI software that does a specific repeated task, like drafting a follow-up email after a meeting.'],
@@ -149,6 +165,7 @@ const GLOSSARY = [
   ['Escalation','When an agent hands a case to a person, for example a customer asking for a refund.'],
   ['Executive sponsor','The leader who owns the goal, the budget and the final yes/no on each agent.'],
   ['Gate','A checkpoint in the 90-day plan. The next phase starts only when it passes.'],
+  ['Implementation CTO','An experienced CTO from our team who does the technical parts of a rollout with you. Start with a free 30-minute call.'],
   ['Loaded hourly cost','What an hour of someone\'s time really costs: salary plus benefits plus overhead, divided by working hours.'],
   ['Pilot','A short trial of an agent with 2-5 users before the whole team gets it.'],
   ['Prescribe','Step two: the report pairs each finding with the agent that fixes it, plus forecast hours saved and cost.'],
@@ -171,6 +188,7 @@ try {
   if (raw) { const o = JSON.parse(raw); if (o && typeof o === 'object') S = Object.assign(blank(), o); }
 } catch (e) { storageOK = false; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { storageOK = false; } };
+const AWAY_MS = S.lastSeen ? Date.now() - S.lastSeen : 0;
 
 // ---------- theme ----------
 try { const t = localStorage.getItem('mk-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -232,13 +250,132 @@ function lessonQuiz(L, wrap) {
     const mark = j => {
       const btn = $(`.opt[data-j="${j}"]`, qEl), why = $('.why', qEl);
       if (j === q.a) { btn.classList.add('right'); $$('.opt', qEl).forEach(b => b.disabled = true); ok.add(qEl.dataset.i); why.textContent = 'Correct. ' + q.why; }
-      else { btn.classList.add('wrong'); btn.disabled = true; why.textContent = 'Not quite. Try another answer.'; }
+      else { btn.classList.add('wrong'); btn.disabled = true; why.textContent = 'Not quite. Try another answer.'; missed(L, qz); }
       qEl.classList.add('answered');
     };
     if (already) mark(q.a);
     $$('.opt', qEl).forEach(b => b.onclick = () => { mark(+b.dataset.j); check(); });
   });
   check();
+}
+
+// ---------- stuck -> CTO help ----------
+const STUCK = {
+  roles:'Not sure who should own what?', m0:'Connections failing, or nobody can approve them?', m1:'Report thin, or it doesn\'t match reality?',
+  m2:'Not sure which agents to build first?', m3:'No Agentforce, no Salesforce admin, or tests won\'t pass?', m4:'Team not using the agent?',
+  rollout:'Missed a gate and not sure how to fix it?', measure:'An agent under 50% of forecast?', gov:'Need a security review or have regulated data?', trouble:'Tried the fix and still stuck?'
+};
+const stuckHTML = (from, title, why) => `<div><b>${esc(title)}</b><span>Talk it through with one of our CTOs. Free, 30 minutes, no obligation.</span></div><a class="btn" href="#expert?from=${encodeURIComponent(from)}&why=${encodeURIComponent(why)}">Get a CTO's help</a>`;
+function missed(L, qz) {
+  S.miss = S.miss || {}; S.miss[L.id] = (S.miss[L.id] || 0) + 1; save();
+  if (S.miss[L.id] >= 2 && !$('.stuck-quiz', qz)) {
+    const c = document.createElement('div'); c.className = 'stuck stuck-quiz';
+    c.innerHTML = stuckHTML(L.id, 'This part trips a lot of people up.', 'quiz');
+    $('#qStatus', qz).after(c);
+  }
+}
+const ASSESS = [
+  ['sf','Do you have Salesforce with Agentforce turned on?','One-click deploy only goes to Agentforce today. A CTO can help you decide how to deploy without it.'],
+  ['admin','Do you have a Salesforce admin, in-house or a partner?','Someone has to set permissions, test agents and deploy them.'],
+  ['time','Can one person give this about 6 hours over the next two weeks?','The admin track takes about 6 hours, plus coordinating people.'],
+  ['scope','Can you start with just one team or one workflow?','Whole-company first scans produce long reports nobody owns.'],
+  ['access','Can you approve connections to your company\'s tools, or do you know who can?','Salesforce and Microsoft 365 connections usually need an admin.'],
+  ['reg','Can you keep regulated data (health, payment, personal financial) out of the first scan?','Masterkey has no SOC 2 report yet, so regulated data needs a careful setup.']
+];
+function assessVerdict(a) {
+  const no = ASSESS.filter(([k]) => a[k] === 'no');
+  if (Object.keys(a).length < ASSESS.length) return null;
+  const critical = a.sf === 'no' || a.admin === 'no';
+  return {no, kind: !no.length ? 'diy' : (critical || no.length >= 3) ? 'cto' : 'standby'};
+}
+function renderPaths(root) {
+  S.assess = S.assess || {}; const a = S.assess.answers = S.assess.answers || {};
+  const qs = $('#assessQs', root), out = $('#assessOut', root);
+  const draw = () => {
+    qs.innerHTML = ASSESS.map(([k, q], i) => `<div class="q"><p>${i + 1}. ${esc(q)}</p><div class="yn"><button type="button" data-k="${k}" data-v="yes" class="${a[k] === 'yes' ? 'on' : ''}" aria-pressed="${a[k] === 'yes'}">Yes</button><button type="button" data-k="${k}" data-v="no" class="${a[k] === 'no' ? 'on' : ''}" aria-pressed="${a[k] === 'no'}">No</button></div></div>`).join('');
+    $$('[data-k]', qs).forEach(b => b.onclick = () => { a[b.dataset.k] = b.dataset.v; save(); draw(); });
+    const v = assessVerdict(a);
+    S.assess.verdict = v ? v.kind : null; save();
+    if (!v) { out.innerHTML = `<span class="hint">${Object.keys(a).length} of ${ASSESS.length} answered</span>`; return; }
+    const reasons = v.no.length ? `<ul style="margin:10px 0 0">${v.no.map(([, , w]) => `<li>${esc(w)}</li>`).join('')}</ul>` : '';
+    const cta = `<a class="btn" href="#expert?from=paths&why=readiness">Get a free CTO call</a>`, diy = `<a class="btn ghost" href="#roles">Start the free course</a>`;
+    out.innerHTML = v.kind === 'diy'
+      ? `<div class="big" style="font-size:22px">You're ready to do it yourself.</div><p style="margin:6px 0 12px">The free course will get you from scan to agents in use. If you get stuck, help is one click away on every lesson.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#roles">Start the free course</a></div>`
+      : v.kind === 'cto'
+      ? `<div class="big" style="font-size:22px">We recommend rolling out with a CTO.</div><p style="margin:6px 0 0">Here's why:</p>${reasons}<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">${cta}<a class="btn ghost" href="#ctoled">How a CTO-led rollout works</a></div>`
+      : `<div class="big" style="font-size:22px">Do it yourself, with a CTO on standby.</div><p style="margin:6px 0 0">You can start on your own. Watch these:</p>${reasons}<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">${diy}${cta}</div>`;
+  };
+  draw();
+}
+function leadContext(from, why) {
+  const tl = track(), done = tl.filter(l => S.done[l.id]).length, r = role();
+  const fromL = LBYID[from];
+  const misses = Object.entries(S.miss || {}).filter(([, n]) => n > 0).map(([k, n]) => `${LBYID[k] ? LBYID[k].title : k} (${n})`).join(', ');
+  const verdict = S.assess && S.assess.verdict ? {diy:'ready to do it yourself', cto:'CTO recommended', standby:'DIY with a CTO on standby'}[S.assess.verdict] : '';
+  const rows = [
+    ['Came from', fromL ? fromL.title : (from || 'direct')],
+    ['Trigger', {quiz:'missed quiz answers', readiness:'readiness check', roi:'ROI under 50% of forecast', stuck:'stuck prompt on lesson'}[why] || why],
+    ['Role', r ? ROLE_NAMES[r.id] : ''],
+    ['Course progress', `${done} of ${tl.length} lessons`],
+    ['Goal', P('hours') ? goalSentence(plainV) : ''],
+    ['Tools', P('tools')],
+    ['Readiness check', verdict],
+    ['Quiz misses', misses]
+  ].filter(([, v]) => v);
+  return {rows, text: rows.map(([k, v]) => `${k}: ${v}`).join('\n')};
+}
+function renderExpert(root) {
+  const qFrom = ROUTE_Q.get('from'), qWhy = ROUTE_Q.get('why');
+  if (qFrom) { S.lastFrom = qFrom; S.lastWhy = qWhy || 'stuck'; save(); }
+  const from = qFrom || S.lastFrom || '', why = qWhy || S.lastWhy || '';
+  const ctx = leadContext(from, why);
+  $('#exCtx', root).textContent = ctx.text || 'Nothing yet. That\'s fine.';
+  const f = $('#leadForm', root), el = n => f.elements[n], err = $('#leadErr', root), done = $('#leadDone', root);
+  const book = BOOKING_URL ? `<a class="btn" href="${esc(BOOKING_URL)}" target="_blank" rel="noopener">Book your call now</a>` : '';
+  if (book) $('#bookTop', root).innerHTML = `<div class="banner"><span>Prefer to pick a time yourself?</span>${book}</div>`;
+  el('fullname').value = S.name || ''; el('company').value = P('company');
+  const r = role(); if (r) el('role').value = ROLE_NAMES[r.id];
+  const fromL = LBYID[from];
+  el('stuck').placeholder = fromL ? `e.g. what happened when you got to "${fromL.title}"` : 'e.g. our Salesforce connection keeps failing';
+  const showDone = (how) => {
+    f.hidden = true; done.hidden = false;
+    done.innerHTML = how === 'sent'
+      ? `<b>Request sent.</b> A CTO will reply by email to book your free 30-minute call.${book ? ' Or book a time now: ' + book : ''} <br><a href="#${esc(from && LBYID[from] ? from : 'welcome')}">← Back to where you were</a>`
+      : how;
+  };
+  if (S.leadSent) {
+    const n = document.createElement('div'); n.className = 'banner';
+    n.innerHTML = `<span>You sent a request on ${new Date(S.leadSent).toLocaleDateString()}. Need something else? Send another below.</span>`;
+    $('#bookTop', root).appendChild(n);
+  }
+  f.onsubmit = async e => {
+    e.preventDefault(); err.textContent = '';
+    if (el('_honey').value) return;
+    const name = el('fullname').value.trim(), email = el('email').value.trim(), company = el('company').value.trim(), stuck = el('stuck').value.trim();
+    const missing = [!name && 'your name', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && 'a valid work email', !company && 'your company', !stuck && 'what you\'re stuck on', !el('consent').checked && 'the consent box'].filter(Boolean);
+    if (missing.length) { err.textContent = 'Please add ' + missing.join(', ') + '.'; return; }
+    S.name = S.name || name; if (!P('company')) S.plan.company = company; save();
+    const payload = {
+      _subject: `Masterkey Academy: CTO help request from ${company}`, _template: 'table', _captcha: 'false', _replyto: email,
+      Name: name, Email: email, Company: company, Phone: el('phone').value.trim(), Role: el('role').value, 'Team size': el('size').value,
+      Salesforce: el('salesforce').value, 'Stuck on': stuck, ...Object.fromEntries(ctx.rows), Page: location.href
+    };
+    const btn = $('#leadBtn', root); btn.disabled = true; btn.textContent = 'Sending…';
+    try {
+      const ac = new AbortController(); const t = setTimeout(() => ac.abort(), 15000);
+      const res = await fetch(LEAD_ENDPOINT, {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify(payload), signal: ac.signal});
+      clearTimeout(t);
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok || String(j.success) !== 'true') throw new Error(j.message || 'send failed');
+      S.leadSent = Date.now(); save(); showDone('sent');
+    } catch (x) {
+      const body = Object.entries(payload).filter(([k]) => !k.startsWith('_')).map(([k, v]) => `${k}: ${v}`).join('\n');
+      const mail = `mailto:${LEAD_EMAIL}?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body.slice(0, 1800))}`;
+      showDone(`<b>We couldn't send that automatically.</b> Your details are below. Email them to <a href="${mail}">${esc(LEAD_EMAIL)}</a> and a CTO will reply to book your call.<pre class="ctx">${esc(body)}</pre><button class="btn small" id="copyLead" type="button">Copy details</button>`);
+      $('#copyLead', root).onclick = () => copy(body);
+    }
+    btn.disabled = false; btn.textContent = 'Request my free call';
+  };
 }
 
 // ---------- plan & templates ----------
@@ -439,10 +576,14 @@ function wire(id, root) {
       const anyDone = Object.keys(S.done).length > 0;
       start.textContent = anyDone && nx ? `Continue: ${nx.title}` : (anyDone ? 'Review the course' : 'Start the course');
       go.textContent = anyDone && nx ? `Continue: ${nx.title} →` : 'Start my lessons →';
+      const bb = $('#backBanner', root);
+      if (bb && AWAY_MS > 7 * 864e5 && anyDone && nx) bb.innerHTML = `<div class="banner"><span><b>Welcome back.</b> You stopped at ${esc(nx.title)}. Pick up where you left off, or get a CTO to help you finish.</span><span style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn small" href="#${nx.id}">Continue</a><a class="btn small ghost" href="#expert?from=${nx.id}&why=returning">Get a CTO's help</a></span></div>`;
     };
     draw();
   }
   if (id === 'plan') renderPlan(root);
+  if (id === 'paths') renderPaths(root);
+  if (id === 'expert') renderExpert(root);
   if (id === 'templates') renderTemplates(root);
   if (id === 'buildlist') renderBuildList(root);
   if (id === 'glossary') $('#glossList', root).innerHTML = GLOSSARY.map(([t, d]) => `<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('');
@@ -488,7 +629,7 @@ function wire(id, root) {
     const calc = () => { const [f, h, c, r] = el.map(e => Math.max(0, +e.value || 0)); S.roi = [f, h, c, r]; save();
       const wk = h * c - r, pct = f ? Math.round(100 * h / f) : 0;
       const v = !f ? ['Enter a forecast','v-mid'] : pct < 50 ? ['Under 50% at day 30: fix it or switch it off','v-bad'] : pct < 70 ? ['On watch: below the 70% day-90 target','v-mid'] : ['On track: 70%+ of forecast','v-good'];
-      out.innerHTML = `<div><span class="big">${money(wk)}</span> <span style="color:var(--ink-2)">per week · about ${money(wk * 52)} a year</span></div><div style="margin-top:8px">${f ? pct + '% of forecast hours' : ''} <span class="verdict ${v[1]}">${v[0]}</span></div>`; };
+      out.innerHTML = `<div><span class="big">${money(wk)}</span> <span style="color:var(--ink-2)">per week · about ${money(wk * 52)} a year</span></div><div style="margin-top:8px">${f ? pct + '% of forecast hours' : ''} <span class="verdict ${v[1]}">${v[0]}</span></div>${f && pct < 50 ? `<div class="stuck" style="margin:14px 0 0">${stuckHTML('measure', 'Want a CTO to find out why?', 'roi')}</div>` : ''}`; };
     el.forEach(e => e.oninput = calc); calc();
   }
   if (id === 'cert') wireExam(root);
@@ -572,12 +713,18 @@ function buildLesson(L, forPrint) {
   wrap.appendChild(tpl.content.cloneNode(true));
   const intro = lessonIntro(L);
   if (intro) { const anchor = $('.lede', wrap) || $('h1', wrap); anchor.after(intro); }
-  if (!forPrint) { const d = doItNow(L); if (d) wrap.appendChild(d); }
+  if (!forPrint) {
+    const d = doItNow(L); if (d) wrap.appendChild(d);
+    if (STUCK[L.id]) { const c = document.createElement('div'); c.className = 'stuck'; c.innerHTML = stuckHTML(L.id, STUCK[L.id], 'stuck'); wrap.appendChild(c); }
+  }
   return wrap;
 }
 
 function render() {
-  let id = decodeURIComponent((location.hash || '#welcome').slice(1)) || 'welcome';
+  const rawHash = decodeURIComponent((location.hash || '#welcome').slice(1)) || 'welcome';
+  const qi = rawHash.indexOf('?');
+  const id = (qi >= 0 ? rawHash.slice(0, qi) : rawHash) || 'welcome';
+  ROUTE_Q = new URLSearchParams(qi >= 0 ? rawHash.slice(qi + 1) : '');
   document.body.className = 'route-' + id.replace(/[^a-z0-9-]/gi, '');
   closeMenu();
   if (id === 'print') {
@@ -590,7 +737,7 @@ function render() {
     window.scrollTo(0, 0); return;
   }
   const L = LBYID[id] || LBYID.welcome;
-  S.last = L.id; save();
+  S.last = L.id; S.lastSeen = Date.now(); save();
   renderNav(L.id);
   const wrap = buildLesson(L, false);
   if (L.quiz) lessonQuiz(L, wrap);

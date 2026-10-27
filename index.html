@@ -186,6 +186,27 @@ tr:last-child td{border-bottom:0}
 footer.site{max-width:780px;margin:56px auto 0;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#000;color:var(--lime);padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
 .toast.on{opacity:1}
+/* CTO help path */
+.stuck{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:#000;color:#fff;border-radius:var(--radius);padding:18px 20px;margin:28px 0}
+.stuck b{display:block;color:#fff;margin-bottom:2px}
+.stuck span{color:#cfcfd4;font-size:14px}
+.stuck > div{flex:1;min-width:220px}
+.paths2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:14px 0}
+.paths2 .card{margin:0;display:flex;flex-direction:column;gap:8px}
+.paths2 .card p{margin:0;flex:1}
+.paths2 .card.dark{background:#000;color:#fff;border-color:#000}
+.paths2 .card.dark p{color:#cfcfd4}
+.paths2 .card.dark a:not(.btn){color:#fff}
+.yn{display:flex;gap:8px;margin-top:8px}
+.yn button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:7px 18px;font-size:14px}
+.yn button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.banner{background:var(--accent-soft);border:1px solid var(--lime);border-radius:var(--radius);padding:14px 18px;margin:0 0 20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.form-err{color:var(--bad);font-size:14px;margin-top:10px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.ctx{white-space:pre-wrap;font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:12px 14px;margin:8px 0 0}
+#helpTop{text-decoration:none;display:inline-flex;align-items:center}
+#backBanner .banner{margin:18px 0 0}
+@media (max-width:960px){#helpTop{display:none}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 @media (max-width:960px){
   .layout{grid-template-columns:1fr}
@@ -220,6 +241,7 @@ footer.site{max-width:780px;margin:56px auto 0;padding-top:20px;border-top:1px s
   <a class="brand" href="#welcome" aria-label="Masterkey Academy home"><img src="assets/logo.svg" alt="masterkey" onerror="this.outerHTML='<span class=&quot;fallback&quot;>masterkey</span>'"><span class="pill">Academy</span></a>
   <div class="grow"></div>
   <div class="pbar" title="Your progress"><span class="lbl" id="pLabel"></span><div class="track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" id="pTrack"><div class="fill" id="pFill" style="width:0"></div></div><span id="pPct">0%</span></div>
+  <a class="tbtn" id="helpTop" href="#expert?from=topbar">Stuck? Get a CTO</a>
   <button class="tbtn" id="themeBtn" aria-label="Switch light or dark mode">◐</button>
   <a class="cta" href="https://masterkey.ai" target="_blank" rel="noopener">Open Masterkey</a>
 </header>
@@ -242,6 +264,15 @@ footer.site{max-width:780px;margin:56px auto 0;padding-top:20px;border-top:1px s
     </div>
     <img src="assets/mascot.webp" alt="" onerror="this.remove()">
   </section>
+
+  <div id="backBanner"></div>
+
+  <h2>Two ways to roll out Masterkey</h2>
+  <div class="paths2">
+    <div class="card"><b>Do it yourself</b><p>Follow this free course from your first Time Scout scan to agents your team uses every day. Best if you have Salesforce Agentforce, an admin, and a few hours to give it.</p><a class="btn" href="#roles">Start the free course</a></div>
+    <div class="card dark"><b>With one of our CTOs</b><p>An experienced CTO does the technical work with you: connections, scoring, building and testing agents. You keep the goal and the decisions. Start with a free 30-minute call.</p><a class="btn" href="#expert?from=welcome">Get a free CTO call</a></div>
+  </div>
+  <p style="margin-top:0">Not sure which fits? <a href="#paths">Take the 1-minute readiness check</a>.</p>
 
   <h2>How this course works</h2>
   <div class="howto">
@@ -641,16 +672,99 @@ footer.site{max-width:780px;margin:56px auto 0;padding-top:20px;border-top:1px s
   <div class="howto">
     <div><b>Talk to Masterkey</b><span>Book a guided setup call or get started at <a href="https://masterkey.ai" target="_blank" rel="noopener">masterkey.ai</a>.</span></div>
     <div><b>Data and privacy</b><span>To delete synced data or ask a privacy question, email <a href="mailto:privacy@masterkey.ai">privacy@masterkey.ai</a> or use Support in the app.</span></div>
+    <div><b>Get a CTO's help</b><span>Stuck on a step? <a href="#expert?from=help">Request a free 30-minute call</a> with one of our CTOs.</span></div>
     <div><b>Inside your company</b><span>Your Masterkey admin owns the rollout. Champions run office hours for the first two weeks after launch.</span></div>
   </div>
   <h2>Your training data</h2>
-  <p>Your progress, answers and plan are saved in this browser on this device only. Nothing is sent anywhere. If you switch devices or clear your browser, you'll start fresh.</p>
+  <p>Your progress, answers and plan are saved in this browser on this device only. Nothing is sent anywhere unless you submit the CTO help form. If you switch devices or clear your browser, you'll start fresh.</p>
   <div class="navrow" style="justify-content:flex-start">
     <a class="btn ghost small" href="#print">Print the full course</a>
     <button class="btn ghost small" id="exportBtn">Download my progress</button>
     <button class="btn ghost small" id="resetBtn">Reset all progress</button>
   </div>
   <div class="status" id="resetNote" aria-live="polite"></div>
+</template>
+
+<template id="t-paths">
+  <span class="eyebrow">Readiness check</span>
+  <h1>Do it yourself, or with a CTO?</h1>
+  <p class="lede">Six yes-or-no questions. In about a minute you'll know whether the free course will get you there, or whether a CTO will save you weeks.</p>
+  <div id="assessQs"></div>
+  <div class="result" id="assessOut" aria-live="polite"></div>
+</template>
+
+<template id="t-ctoled">
+  <span class="eyebrow">With a CTO</span>
+  <h1>Rolling out with a CTO</h1>
+  <p class="lede">Same 90-day plan, same gates. The difference is who does the technical work.</p>
+  <h2>When a CTO makes sense</h2>
+  <ul>
+    <li>You don't have Salesforce Agentforce, or nobody to run it. One-click deploy only goes to Agentforce today.</li>
+    <li>Nobody on your team can give the rollout about 6 hours over two weeks.</li>
+    <li>You want more than one workflow fixed, or results in front of leadership fast.</li>
+    <li>Regulated data (health, payment, personal financial) is involved and needs a careful setup.</li>
+    <li>You started on your own and have been stuck on the same step for more than a week.</li>
+  </ul>
+  <h2>Who does what</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Phase</th><th>You (the customer)</th><th>Your CTO</th></tr>
+    <tr><td><b>Setup + scan</b><br>Days 1-14</td><td>Set the goal with a number and a date. Pick the first workflow. Announce it to the team. Grant access. Send the baseline survey.</td><td>Connects only the tools the workflow needs, with the narrowest access. Runs the scan. Sanity-checks the report against your baseline.</td></tr>
+    <tr><td><b>Build list</b></td><td>Process owners confirm the findings. The sponsor signs the build list.</td><td>Scores every prescription with your process owners and drafts the build list.</td></tr>
+    <tr><td><b>Build + pilot</b><br>Days 15-30</td><td>Name 2-5 pilot users. Give feedback on drafts.</td><td>Sets up the sandbox, writes the agent's rules, runs 20-30 tests, sets up the pilot and writes the rollback plan.</td></tr>
+    <tr><td><b>Go live</b><br>Days 31-60</td><td>Sponsor tells the team what the hours are for. Name champions. Retire the old step.</td><td>Deploys, watches the audit trail, fixes flagged errors, runs the end-user session with your champions.</td></tr>
+    <tr><td><b>Scale</b><br>Days 61-90</td><td>Decide what goes in wave 2.</td><td>Measures at day 30, 60 and 90, raises autonomy where it's earned, runs the second scan.</td></tr>
+  </table></div>
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><b>Free 30-minute call.</b> A CTO looks at where you are, where you're stuck, and what it would take to get your first agents live.</li>
+    <li><b>A written proposal, if you want one.</b> Scope, timeline and price for your rollout. No obligation.</li>
+    <li><b>The rollout.</b> The 90-day plan, with the CTO doing the technical work and your team owning the goal and the decisions.</li>
+  </ol>
+  <h2>Bring this to your first call</h2>
+  <ul>
+    <li>Your goal in one line, with a number and a date (<a href="#plan">Your rollout plan</a> writes it for you)</li>
+    <li>The workflow you want fixed first, and the tools it runs on</li>
+    <li>Who can grant admin access to those tools</li>
+    <li>Your Time Scout Report, if you've already run a scan</li>
+  </ul>
+  <div class="stuck"><div><b>Ready to talk to a CTO?</b><span>Free, 30 minutes, no obligation.</span></div><a class="btn" href="#expert?from=ctoled">Get a free CTO call</a></div>
+  <details class="faq" style="margin-top:28px"><summary>For CTOs running a Masterkey rollout</summary>
+    <ul>
+      <li>Collect the baseline before anyone reads the report.</li>
+      <li>Approve only the connection scopes the scanned workflow needs; record what you approved.</li>
+      <li>Sandbox first, always. Set pass criteria before testing; 20-30 cases at 70/20/10.</li>
+      <li>Every new agent starts at Level 1 (draft only). Never Level 3 for payments, pricing, contracts, legal or medical statements, hiring or deleting records.</li>
+      <li>Write the rollback plan before go-live and hand it to the customer's admin.</li>
+      <li>Day 30: under 50% of forecast hours means fix it or switch it off.</li>
+      <li>Leave the customer able to run wave 2 themselves: hand over the build list, test cases and rollback plans.</li>
+    </ul>
+  </details>
+</template>
+
+<template id="t-expert">
+  <span class="eyebrow">Get a CTO's help</span>
+  <h1>Get unstuck with a free 30-minute CTO call</h1>
+  <p class="lede">Tell us where you're stuck. One of our CTOs will look at it and reply by email to book a time. Free, no obligation.</p>
+  <div id="bookTop"></div>
+  <div id="leadDone" class="done-when" hidden></div>
+  <form class="card" id="leadForm" novalidate>
+    <div class="fields">
+      <label>Your name *<input name="fullname" autocomplete="name" required></label>
+      <label>Work email *<input name="email" type="email" autocomplete="email" required></label>
+      <label>Company *<input name="company" autocomplete="organization" required></label>
+      <label>Phone (optional)<input name="phone" type="tel" autocomplete="tel"></label>
+      <label>Your role<select name="role"><option value="">Choose…</option><option>Executive sponsor</option><option>Masterkey admin</option><option>Process owner</option><option>Salesforce admin</option><option>Champion</option><option>End user</option><option>Working with a CTO</option></select></label>
+      <label>Team size<select name="size"><option value="">Choose…</option><option>1-10</option><option>11-50</option><option>51-200</option><option>201-1,000</option><option>1,000+</option></select></label>
+      <label class="wide">Salesforce<select name="salesforce"><option value="">Choose…</option><option>Salesforce with Agentforce enabled</option><option>Salesforce, no Agentforce yet</option><option>No Salesforce</option><option>Not sure</option></select></label>
+      <label class="wide">What are you stuck on? *<textarea name="stuck" rows="4" required></textarea></label>
+    </div>
+    <div class="lbl" style="margin-top:16px">We'll also send this, so the CTO doesn't start from zero:</div>
+    <div class="ctx" id="exCtx"></div>
+    <label class="hp" aria-hidden="true">Leave this empty<input name="_honey" tabindex="-1" autocomplete="off"></label>
+    <label style="display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:14px"><input type="checkbox" name="consent" required style="margin-top:4px"> <span>Send these details to the Masterkey team so a CTO can contact me about this request.</span></label>
+    <div class="form-err" id="leadErr" aria-live="assertive"></div>
+    <div style="margin-top:16px"><button class="btn" type="submit" id="leadBtn">Request my free call</button></div>
+  </form>
 </template>
 
 <template id="t-cert">
