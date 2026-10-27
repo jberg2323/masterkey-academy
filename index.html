@@ -4,191 +4,302 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Masterkey Academy</title>
-<meta name="description" content="Masterkey onboarding and training: from first Time Scout scan to AI agents in daily use in 90 days.">
+<meta name="description" content="Masterkey Academy: the step-by-step training for going from your first Time Scout scan to AI agents in daily use in 90 days.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="assets/favicon.webp" type="image/webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f7f6f2; --surface:#ffffff; --surface-2:#f0eee8; --ink:#16161a; --ink-2:#55555f; --line:#e2dfd6;
-  --accent:#2f5bd3; --accent-ink:#ffffff; --accent-soft:#e6ecfb; --good:#1f7a4d; --good-soft:#e3f3ea; --bad:#b4342b; --bad-soft:#fbe9e7; --warn:#8a5a00; --warn-soft:#fbf1dc;
-  --shadow:0 1px 2px rgba(20,20,30,.05),0 4px 16px rgba(20,20,30,.05);
-  --radius:12px;
+  --lime:#E3FF34; --black:#000000; --char:#2C2B30;
+  --bg:#ffffff; --surface:#ffffff; --surface-2:#f7f7f7; --ink:#000000; --ink-2:#55545c; --line:#e6e6e6;
+  --accent:#000000; --accent-ink:#000000; --accent-soft:#f6ffcc; --hi:#E3FF34;
+  --good:#1a7f4b; --good-soft:#e5f6ec; --bad:#b4342b; --bad-soft:#fbe9e7; --warn:#7a5a00; --warn-soft:#fff5d6;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.05);
+  --radius:14px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#111114; --surface:#1a1a1f; --surface-2:#23232a; --ink:#ececf0; --ink-2:#a2a2ad; --line:#2e2e36;
-    --accent:#7d9cff; --accent-ink:#0d0f18; --accent-soft:#1f2640; --good:#5fcf95; --good-soft:#15291f; --bad:#f08a80; --bad-soft:#331a18; --warn:#e5b45a; --warn-soft:#2e2615;
+    --bg:#000000; --surface:#131315; --surface-2:#1c1c1f; --ink:#ffffff; --ink-2:#a9a8b0; --line:#2c2b30;
+    --accent:#E3FF34; --accent-soft:#22260c; --good:#5fd394; --good-soft:#10261a; --bad:#f08a80; --bad-soft:#331a18; --warn:#f0c35a; --warn-soft:#2b230f;
     --shadow:none;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#111114; --surface:#1a1a1f; --surface-2:#23232a; --ink:#ececf0; --ink-2:#a2a2ad; --line:#2e2e36;
-  --accent:#7d9cff; --accent-ink:#0d0f18; --accent-soft:#1f2640; --good:#5fcf95; --good-soft:#15291f; --bad:#f08a80; --bad-soft:#331a18; --warn:#e5b45a; --warn-soft:#2e2615;
+  --bg:#000000; --surface:#131315; --surface-2:#1c1c1f; --ink:#ffffff; --ink-2:#a9a8b0; --line:#2c2b30;
+  --accent:#E3FF34; --accent-soft:#22260c; --good:#5fd394; --good-soft:#10261a; --bad:#f08a80; --bad-soft:#331a18; --warn:#f0c35a; --warn-soft:#2b230f;
   --shadow:none;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:var(--accent)}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 Poppins,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
+main a:not(.btn){text-decoration:underline;text-decoration-color:var(--ink-2)}
 button{font:inherit;cursor:pointer}
-.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;padding:12px 20px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.brand{font-family:Fraunces,Georgia,serif;font-size:20px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
-.brand span{color:var(--accent)}
+:focus-visible{outline:3px solid var(--lime);outline-offset:2px;box-shadow:0 0 0 5px #000}
+.skip{position:absolute;left:-999px;top:8px;background:var(--lime);color:#000;padding:8px 14px;border-radius:10px;z-index:99}
+.skip:focus{left:8px}
+/* top bar: always brand black */
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;height:64px;padding:0 20px;background:#000;color:#fff}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.brand img{height:22px;width:auto;display:block}
+.brand .fallback{font-weight:600;font-size:20px;letter-spacing:-.02em}
+.brand .pill{font-size:12px;font-weight:600;letter-spacing:.02em;background:var(--lime);color:#000;border-radius:999px;padding:2px 10px}
 .topbar .grow{flex:1}
-.pbar{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);min-width:0}
-.pbar .track{width:160px;height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
-.pbar .fill{height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
-.iconbtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:13px}
+.pbar{display:flex;align-items:center;gap:10px;font-size:13px;color:#cfcfd4;min-width:0}
+.pbar .track{width:150px;height:6px;border-radius:99px;background:#2c2b30;overflow:hidden}
+.pbar .fill{height:100%;background:var(--lime);border-radius:99px;transition:width .4s}
+.tbtn{border:1px solid #3a393f;background:transparent;color:#fff;border-radius:10px;height:36px;padding:0 12px;font-size:15px;white-space:nowrap}
+.tbtn:hover{border-color:var(--lime)}
+.cta{display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:10px;background:var(--lime);color:#000;text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
 .menubtn{display:none}
-.layout{display:grid;grid-template-columns:280px 1fr;max-width:1280px;margin:0 auto}
-nav.side{position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;padding:20px 12px 40px 20px;border-right:1px solid var(--line)}
-.side h4{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:18px 8px 6px;font-weight:600}
-.side a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:14px;line-height:1.35}
+.layout{display:grid;grid-template-columns:288px 1fr;max-width:1320px;margin:0 auto}
+nav.side{position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;padding:18px 12px 40px 18px;border-right:1px solid var(--line);background:var(--bg)}
+.side h4{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:20px 10px 6px;font-weight:600}
+.side a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14px;line-height:1.35;border-left:3px solid transparent}
 .side a:hover{background:var(--surface-2)}
-.side a.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.side a.active{background:var(--accent-soft);font-weight:600;border-left-color:var(--lime)}
 .dot{flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:11px;color:transparent}
-.dot.done{background:var(--good);border-color:var(--good);color:#fff}
-.req{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.04em;color:var(--accent);background:var(--accent-soft);padding:1px 6px;border-radius:99px}
-main{padding:36px 48px 96px;min-width:0}
-.lesson{max-width:760px;margin:0 auto}
-.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
-h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:38px;line-height:1.15;letter-spacing:-.015em;margin:6px 0 12px}
-h2{font-size:22px;margin:40px 0 10px;letter-spacing:-.01em}
-h3{font-size:17px;margin:28px 0 8px}
+.dot.done{background:var(--lime);border-color:var(--lime);color:#000}
+.dot.tool{border:0;color:var(--ink-2);font-size:13px}
+.req{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.04em;color:#000;background:var(--lime);padding:1px 7px;border-radius:99px}
+.side .sidefoot{margin:24px 10px 0;font-size:12px;color:var(--ink-2)}
+main{padding:40px 48px 110px;min-width:0;overflow-x:clip}
+.lesson{max-width:780px;margin:0 auto}
+.crumb{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.eyebrow{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#000;background:var(--lime);padding:2px 10px;border-radius:999px}
+h1{font-weight:500;font-size:42px;line-height:1.12;letter-spacing:-.025em;margin:14px 0 14px}
+h2{font-size:23px;font-weight:600;margin:44px 0 10px;letter-spacing:-.015em}
+h3{font-size:17px;font-weight:600;margin:28px 0 8px}
 .lede{font-size:18px;color:var(--ink-2);margin:0 0 20px}
-.meta{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
-.chip{font-size:12px;padding:4px 10px;border-radius:99px;background:var(--surface-2);color:var(--ink-2)}
-.goal{border-left:3px solid var(--accent);background:var(--surface);padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;box-shadow:var(--shadow);margin:20px 0}
-.goal b{color:var(--accent)}
-.note{background:var(--warn-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);padding:12px 16px;border-radius:var(--radius);font-size:15px;margin:18px 0}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.chip{font-size:12px;padding:4px 11px;border-radius:99px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.goal{border-left:4px solid var(--lime);background:var(--surface);padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;box-shadow:var(--shadow);margin:20px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.note{background:var(--warn-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);padding:12px 16px;border-radius:var(--radius);font-size:15px;margin:18px 0}
 .note b{color:var(--warn)}
 .done-when{background:var(--good-soft);padding:12px 16px;border-radius:var(--radius);font-size:15px;margin:18px 0}
 .done-when b{color:var(--good)}
 ul,ol{padding-left:22px}
 li{margin:6px 0}
 .tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
-table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.45}
+table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}
 th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
 th{background:var(--surface-2);font-weight:600;font-size:13px}
 tr:last-child td{border-bottom:0}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin:20px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);margin:20px 0}
 .diagram{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin:18px 0;overflow-x:auto}
 .diagram svg{display:block;width:100%;min-width:560px;height:auto}
-.diagram text{font-family:Inter,system-ui,sans-serif}
+.diagram text{font-family:Poppins,system-ui,sans-serif}
 .steps{counter-reset:s;list-style:none;padding:0}
-.steps li{counter-increment:s;position:relative;padding:12px 14px 12px 50px;background:var(--surface);border:1px solid var(--line);border-radius:10px;margin:8px 0}
-.steps li::before{content:counter(s);position:absolute;left:14px;top:12px;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:13px;display:grid;place-items:center}
+.steps li{counter-increment:s;position:relative;padding:12px 14px 12px 52px;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:8px 0}
+.steps li::before{content:counter(s);position:absolute;left:14px;top:12px;width:26px;height:26px;border-radius:50%;background:var(--lime);color:#000;font-weight:600;font-size:13px;display:grid;place-items:center}
 .formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface-2);padding:12px 16px;border-radius:10px;font-size:14px;overflow-x:auto}
+/* intro block injected into every lesson */
+.intro{display:grid;gap:12px;margin:8px 0 26px}
+.plain{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--lime) 60%,var(--line));border-radius:var(--radius);padding:16px 18px}
+.plain .tag{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:4px}
+.plain p{margin:0;font-size:16px}
+.outcome{font-size:15px;color:var(--ink-2)}
+.outcome b{color:var(--ink)}
 /* tools */
 .tool h3{margin-top:0}
 .tool .row{display:grid;grid-template-columns:150px 1fr 36px;align-items:center;gap:12px;margin:10px 0;font-size:14px}
-.tool input[type=range]{width:100%;accent-color:var(--accent)}
-.tool .val{font-weight:700;text-align:right}
-.result{margin-top:14px;padding:14px 16px;border-radius:10px;background:var(--surface-2);font-size:15px}
-.result .big{font-size:28px;font-weight:700;letter-spacing:-.01em}
+.tool input[type=range]{width:100%;accent-color:#000}
+:root[data-theme="dark"] .tool input[type=range]{accent-color:var(--lime)}
+.tool .val{font-weight:600;text-align:right}
+.result{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--surface-2);font-size:15px}
+.result .big{font-size:30px;font-weight:600;letter-spacing:-.02em}
 .verdict{display:inline-block;margin-left:8px;font-size:13px;font-weight:600;padding:3px 10px;border-radius:99px}
 .v-good{background:var(--good-soft);color:var(--good)} .v-mid{background:var(--warn-soft);color:var(--warn)} .v-bad{background:var(--bad-soft);color:var(--bad)}
-.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.fields label{font-size:13px;color:var(--ink-2);display:block}
-.fields input,.text-in{width:100%;margin-top:4px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.fields label,.lbl{font-size:13px;color:var(--ink-2);display:block;font-weight:500}
+.fields input,.fields textarea,.fields select,.text-in{width:100%;margin-top:5px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:15px}
+.fields .wide{grid-column:1/-1}
+.hint{font-size:13px;color:var(--ink-2);margin:4px 0 0}
 /* quiz */
-.quiz{margin-top:48px;border-top:1px solid var(--line);padding-top:28px}
+.quiz,.doit{margin-top:52px;border-top:1px solid var(--line);padding-top:30px}
 .q{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:14px 0}
 .q p{margin:0 0 12px;font-weight:600}
-.opt{display:block;width:100%;text-align:left;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:6px 0;font-size:15px}
-.opt:hover:not([disabled]){border-color:var(--accent)}
-.opt.right{background:var(--good-soft);border-color:var(--good);color:var(--ink)}
-.opt.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--ink)}
-.opt[disabled]{cursor:default}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin:6px 0;font-size:15px}
+.opt:hover:not([disabled]){border-color:var(--ink)}
+.opt.right{background:var(--good-soft);border-color:var(--good)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.opt.picked{border-color:var(--ink);background:var(--accent-soft)}
+.opt[disabled]{cursor:default;color:var(--ink)}
 .why{font-size:14px;color:var(--ink-2);margin-top:8px;display:none}
 .q.answered .why{display:block}
-.btn{border:0;border-radius:10px;padding:11px 20px;font-weight:600;font-size:15px;background:var(--accent);color:var(--accent-ink)}
-.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;padding:11px 20px;font-weight:500;font-size:15px;background:var(--lime);color:#000;text-decoration:none}
+.btn:hover{filter:brightness(.95)}
+.btn.dark{background:var(--ink);color:var(--bg)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn.small{padding:6px 12px;font-size:13px}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
-.navrow{display:flex;justify-content:space-between;gap:12px;margin-top:36px;flex-wrap:wrap}
+.navrow{display:flex;justify-content:space-between;gap:12px;margin-top:40px;flex-wrap:wrap}
 .status{font-size:14px;color:var(--ink-2);margin-top:10px}
-/* roles */
-.roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:14px 0}
+/* welcome */
+.hero{background:#000;color:#fff;border-radius:20px;padding:40px 36px;display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:center;overflow:hidden}
+.hero h1{color:#fff;font-size:44px;margin:12px 0}
+.hero p{color:#cfcfd4;margin:0 0 18px;font-size:17px}
+.hero .threesteps{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 22px;font-size:15px;color:#fff}
+.hero img{width:100%;max-width:260px;justify-self:center}
+.hero .btn.ghost{color:#fff;border-color:#fff}
+.howto{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.howto div{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.howto b{display:block;margin:6px 0 2px}
+.howto span{font-size:14px;color:var(--ink-2)}
+.howto .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--lime);color:#000;font-weight:600;font-size:13px}
+.roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:14px 0}
 .role{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);padding:14px;color:var(--ink)}
-.role b{display:block;margin-bottom:4px}
-.role small{color:var(--ink-2);font-size:13px;line-height:1.4;display:block}
-.role.sel{border-color:var(--accent);background:var(--accent-soft)}
-.checklist label{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;margin:8px 0;font-size:15px;cursor:pointer}
-.checklist input{margin-top:4px;accent-color:var(--good);width:16px;height:16px;flex:none}
+.role b{display:block;margin-bottom:2px}
+.role small{color:var(--ink-2);font-size:13px;line-height:1.45;display:block}
+.role.sel{border-color:var(--ink);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--ink)}
+.checklist label{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:8px 0;font-size:15px;cursor:pointer}
+.checklist input{margin-top:5px;accent-color:#000;width:17px;height:17px;flex:none}
+:root[data-theme="dark"] .checklist input{accent-color:var(--lime)}
+.checklist label:has(input:checked){background:var(--accent-soft)}
+.checklist label:has(input:checked) .t{text-decoration:line-through;text-decoration-color:var(--ink-2)}
+/* templates */
+.tpl{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin:16px 0;overflow:hidden}
+.tpl header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.tpl header b{font-size:15px}
+.tpl header small{display:block;color:var(--ink-2);font-size:13px}
+.tpl pre{margin:0;padding:16px;white-space:pre-wrap;word-wrap:break-word;font:14px/1.6 Poppins,system-ui,sans-serif}
+.ph{background:var(--warn-soft);color:var(--warn);border-radius:4px;padding:0 3px}
+/* build list */
+.bl table input,.bl table select{width:100%;min-width:90px;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:13px}
+.bl td{padding:6px}
+.bl .x{background:none;border:0;color:var(--ink-2);font-size:18px}
+.glossary dt{font-weight:600;margin-top:16px}
+.glossary dd{margin:2px 0 0;color:var(--ink-2)}
 /* certificate */
-.cert{display:none;text-align:center;border:2px solid var(--accent);border-radius:16px;padding:44px 28px;background:var(--surface);margin:24px 0}
+.cert{display:none;text-align:center;border:2px solid #000;border-radius:20px;padding:0 0 36px;background:#fff;color:#000;margin:24px 0;overflow:hidden}
 .cert.show{display:block}
-.cert .seal{font-family:Fraunces,Georgia,serif;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
-.cert .who{font-family:Fraunces,Georgia,serif;font-size:36px;margin:14px 0 6px}
-.faq details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:8px 0}
+.cert .band{background:#000;padding:22px;display:flex;justify-content:center;align-items:center;gap:10px}
+.cert .band img{height:24px}
+.cert .who{font-size:38px;font-weight:500;margin:14px 0 6px;letter-spacing:-.02em}
+.cert .title{display:inline-block;background:#E3FF34;font-weight:600;font-size:20px;padding:4px 16px;border-radius:999px;margin:8px 0}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:8px 0}
 .faq summary{font-weight:600;cursor:pointer}
 .overlay{display:none}
-footer.small{max-width:760px;margin:48px auto 0;font-size:13px;color:var(--ink-2)}
-@media (max-width:900px){
+footer.site{max-width:780px;margin:56px auto 0;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#000;color:var(--lime);padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media (max-width:960px){
   .layout{grid-template-columns:1fr}
-  nav.side{position:fixed;left:0;top:57px;bottom:0;width:290px;background:var(--bg);z-index:30;transform:translateX(-100%);transition:transform .25s;height:auto}
-  nav.side.open{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.2)}
-  .overlay.open{display:block;position:fixed;inset:57px 0 0 0;background:rgba(0,0,0,.3);z-index:25}
+  nav.side{position:fixed;left:0;top:64px;bottom:0;width:300px;z-index:30;transform:translateX(-100%);transition:transform .25s;height:auto}
+  nav.side.open{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.3)}
+  .overlay.open{display:block;position:fixed;inset:64px 0 0 0;background:rgba(0,0,0,.4);z-index:25}
   .menubtn{display:inline-block}
-  main{padding:24px 16px 80px}
-  h1{font-size:30px}
-  .pbar .track{width:70px}
-  .pbar .lbl{display:none}
+  main{padding:24px 16px 90px}
+  h1{font-size:32px}
+  .hero{grid-template-columns:1fr;padding:28px 22px}
+  .hero h1{font-size:32px}
+  .hero img{max-width:160px;grid-row:1}
+  .pbar .track{width:60px}
+  .pbar .lbl,.cta,.brand .pill{display:none}
   .tool .row{grid-template-columns:110px 1fr 30px}
 }
 @media print{
-  .topbar,nav.side,.navrow,.quiz,.no-print,.lesson > *:not(.cert-wrap){display:none!important}
+  .topbar,nav.side,.navrow,.quiz,.doit,.no-print,.toast,.overlay{display:none!important}
   .layout{display:block} main{padding:0}
+  body{background:#fff;color:#000}
+  body.route-cert .lesson > *:not(.cert-wrap){display:none!important}
+  body.route-cert .cert{display:block}
+  .lesson-print{page-break-after:always}
+  .tpl,.card,.q{break-inside:avoid}
 }
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to lesson</a>
 <header class="topbar">
-  <button class="iconbtn menubtn" id="menuBtn" aria-label="Open lessons">☰</button>
-  <div class="brand">Masterkey <span>Academy</span></div>
+  <button class="tbtn menubtn" id="menuBtn" aria-label="Open the lesson menu" aria-controls="side" aria-expanded="false">☰ Menu</button>
+  <a class="brand" href="#welcome" aria-label="Masterkey Academy home"><img src="assets/logo.svg" alt="masterkey" onerror="this.outerHTML='<span class=&quot;fallback&quot;>masterkey</span>'"><span class="pill">Academy</span></a>
   <div class="grow"></div>
-  <div class="pbar" title="Lessons completed"><span class="lbl" id="pLabel">0 of 0 lessons</span><div class="track"><div class="fill" id="pFill" style="width:0"></div></div><span id="pPct">0%</span></div>
-  <button class="iconbtn" id="themeBtn" aria-label="Toggle theme">◐</button>
+  <div class="pbar" title="Your progress"><span class="lbl" id="pLabel"></span><div class="track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" id="pTrack"><div class="fill" id="pFill" style="width:0"></div></div><span id="pPct">0%</span></div>
+  <button class="tbtn" id="themeBtn" aria-label="Switch light or dark mode">◐</button>
+  <a class="cta" href="https://masterkey.ai" target="_blank" rel="noopener">Open Masterkey</a>
 </header>
 <div class="overlay" id="overlay"></div>
 <div class="layout">
   <nav class="side" id="side" aria-label="Lessons"></nav>
-  <main id="main"></main>
+  <main id="main" tabindex="-1"><noscript><div class="lesson"><h1>Masterkey Academy</h1><p>This training needs JavaScript turned on. Please enable it in your browser settings and reload the page.</p></div></noscript></main>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- ====================== LESSON CONTENT ====================== -->
+<!-- ====================== PAGES ====================== -->
 <template id="t-welcome">
-  <div class="eyebrow">Start here</div>
-  <h1>From first scan to agents in daily use in 90 days</h1>
-  <p class="lede">Masterkey finds where your team's time is wasted, prescribes the AI agent that fixes it, and helps you deploy it. This course walks you through the whole rollout, one module at a time, with a short check at the end of each.</p>
-  <div class="meta"><span class="chip">13 lessons</span><span class="chip">Knowledge check per lesson</span><span class="chip">Admin certification</span></div>
+  <section class="hero">
+    <div>
+      <span class="eyebrow">Masterkey Academy</span>
+      <h1>From your first scan to AI agents your team actually uses.</h1>
+      <p>A step-by-step course for every person in a Masterkey rollout. Plain-English lessons, copy-ready templates, and a 90-day plan you can follow without any technical background.</p>
+      <div class="threesteps"><span>✜ Diagnose your busywork</span><span>✦ Prescribe your agents</span><span>➤ Deploy to Agentforce</span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" id="startBtn" href="#roles">Start the course</a><a class="btn ghost" href="#plan">Fill in your rollout plan</a></div>
+    </div>
+    <img src="assets/mascot.webp" alt="" onerror="this.remove()">
+  </section>
+
+  <h2>How this course works</h2>
+  <div class="howto">
+    <div><span class="n">1</span><b>Pick your role</b><span>We mark only the lessons you need. Most people finish in under two hours.</span></div>
+    <div><span class="n">2</span><b>Read the lesson</b><span>Each starts with a plain-English summary and what you'll have at the end.</span></div>
+    <div><span class="n">3</span><b>Do it now</b><span>Tick off real steps on your own company. Templates fill in your details for you.</span></div>
+    <div><span class="n">4</span><b>Check yourself</b><span>A few quick questions. Wrong answers explain why, so you learn as you go.</span></div>
+  </div>
+
+  <h2>Who are you in this rollout?</h2>
+  <p style="margin-top:0">Pick the role that fits you best. Not sure? Choose <b>Masterkey admin</b> if you're setting it up, <b>End user</b> if you'll just use an agent.</p>
+  <div class="card">
+    <div class="roles" id="roles"></div>
+    <div class="status" id="roleNote" aria-live="polite"></div>
+    <label class="lbl" for="nameIn" style="margin-top:18px">Your name <span style="font-weight:400">(printed on your certificate)</span></label>
+    <input class="text-in" id="nameIn" placeholder="First and last name" autocomplete="name">
+    <div style="margin-top:18px"><a class="btn dark" id="goBtn" href="#roles">Start my lessons →</a></div>
+  </div>
+
   <h2>How Masterkey works</h2>
   <div class="diagram">
-    <svg viewBox="0 0 760 264" role="img" aria-label="Scan, prescribe, deploy, then measure and re-scan" font-size="11.5">
+    <svg viewBox="0 0 760 264" role="img" aria-label="Diagnose, prescribe, deploy, then adopt and measure, then re-scan" font-size="11.5">
       <defs><marker id="mk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink-2)"/></marker></defs>
       <text x="24" y="34" font-size="15" font-weight="600" fill="var(--ink)">Scan, prescribe, deploy, then measure and re-scan</text>
       <g fill="none" stroke="var(--ink-2)" stroke-width="1.25"><path d="M184 112H206" marker-end="url(#mk-arrow)"/><path d="M368 112H390" marker-end="url(#mk-arrow)"/><path d="M552 112H574" marker-end="url(#mk-arrow)"/><path d="M716 160V216H44V162" marker-end="url(#mk-arrow)"/></g>
-      <rect x="24" y="64" width="160" height="96" rx="8" fill="var(--accent)" fill-opacity=".12" stroke="var(--accent)" stroke-width="2"/>
-      <text x="40" y="90" font-size="14" font-weight="600" fill="var(--ink)">Diagnose</text><text x="40" y="112" fill="var(--ink)">Connect your tools;</text><text x="40" y="128" fill="var(--ink)">Time Scout maps</text><text x="40" y="144" fill="var(--ink)">repeated busywork</text>
-      <rect x="208" y="64" width="160" height="96" rx="8" fill="none" stroke="var(--line)" stroke-width="1.25"/>
-      <text x="224" y="90" font-size="14" font-weight="600" fill="var(--ink)">Prescribe</text><text x="224" y="112" fill="var(--ink)">Report pairs each</text><text x="224" y="128" fill="var(--ink)">finding with an agent,</text><text x="224" y="144" fill="var(--ink)">hours saved, cost</text>
-      <rect x="392" y="64" width="160" height="96" rx="8" fill="none" stroke="var(--line)" stroke-width="1.25"/>
-      <text x="408" y="90" font-size="14" font-weight="600" fill="var(--ink)">Deploy</text><text x="408" y="112" fill="var(--ink)">Test in sandbox,</text><text x="408" y="128" fill="var(--ink)">one click into</text><text x="408" y="144" fill="var(--ink)">Salesforce Agentforce</text>
-      <rect x="576" y="64" width="160" height="96" rx="8" fill="none" stroke="var(--line)" stroke-width="1.25"/>
+      <rect x="24" y="64" width="160" height="96" rx="10" fill="#E3FF34" stroke="#000" stroke-width="1.5"/>
+      <text x="40" y="90" font-size="14" font-weight="600" fill="#000">✜ Diagnose</text><text x="40" y="112" fill="#000">Connect your tools;</text><text x="40" y="128" fill="#000">Time Scout maps</text><text x="40" y="144" fill="#000">repeated busywork</text>
+      <rect x="208" y="64" width="160" height="96" rx="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.25"/>
+      <text x="224" y="90" font-size="14" font-weight="600" fill="var(--ink)">✦ Prescribe</text><text x="224" y="112" fill="var(--ink)">Report pairs each</text><text x="224" y="128" fill="var(--ink)">finding with an agent,</text><text x="224" y="144" fill="var(--ink)">hours saved, cost</text>
+      <rect x="392" y="64" width="160" height="96" rx="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.25"/>
+      <text x="408" y="90" font-size="14" font-weight="600" fill="var(--ink)">➤ Deploy</text><text x="408" y="112" fill="var(--ink)">Test in sandbox,</text><text x="408" y="128" fill="var(--ink)">one click into</text><text x="408" y="144" fill="var(--ink)">Salesforce Agentforce</text>
+      <rect x="576" y="64" width="160" height="96" rx="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.25"/>
       <text x="592" y="90" font-size="14" font-weight="600" fill="var(--ink)">Adopt + measure</text><text x="592" y="112" fill="var(--ink)">Team uses agents;</text><text x="592" y="128" fill="var(--ink)">hours vs. baseline</text><text x="592" y="144" fill="var(--ink)">tracked weekly</text>
       <g fill="var(--ink-2)" text-anchor="middle"><text x="104" y="184">Modules 0-2</text><text x="288" y="184">Module 2</text><text x="472" y="184">Module 3</text><text x="656" y="184">Module 4 + KPIs</text><text x="380" y="240">Second free scan confirms the savings and finds the next wave</text></g>
     </svg>
   </div>
-  <p>Start with one scoped workflow, ship 1-3 agents, prove the hours, then re-scan for the next wave.</p>
-  <h2>Set up your training</h2>
+  <p>Start with one scoped workflow, ship 1-3 agents, prove the hours, then re-scan for the next wave. Signup includes <b>$500 in free credits</b> and <b>two full Time Scout reports</b>, no card required.</p>
+</template>
+
+<template id="t-plan">
+  <span class="eyebrow">Your rollout</span>
+  <h1>Your rollout plan</h1>
+  <p class="lede">Fill this in once. Every template, the build list and your goal statement use these answers, so you never retype them. Saved in this browser only.</p>
   <div class="card">
-    <label for="nameIn"><b>Your name</b> <span style="color:var(--ink-2);font-size:14px">(printed on your certificate)</span></label>
-    <input class="text-in" id="nameIn" placeholder="First and last name" autocomplete="name">
-    <p style="margin:20px 0 4px"><b>Your role in the rollout</b> — we'll mark the lessons you're required to take.</p>
-    <div class="roles" id="roles"></div>
-    <div class="status" id="roleNote"></div>
+    <h3 style="margin-top:0">The goal</h3>
+    <div class="fields" id="planGoal"></div>
+    <div class="result" id="goalOut" style="margin-top:18px"></div>
   </div>
+  <div class="card">
+    <h3 style="margin-top:0">The people</h3>
+    <p class="hint" style="margin:-4px 0 12px">Assign every role by name before Module 0 starts. One person can hold several roles.</p>
+    <div class="fields" id="planPeople"></div>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">The numbers</h3>
+    <p class="hint" style="margin:-4px 0 12px">Fill in the baseline during Module 1, and the cost when you calculate ROI.</p>
+    <div class="fields" id="planNums"></div>
+  </div>
+  <div class="navrow no-print" style="margin-top:8px"><button class="btn ghost small" onclick="window.print()">Print my plan</button></div>
 </template>
 
 <template id="t-roles">
@@ -210,7 +321,6 @@ footer.small{max-width:760px;margin:48px auto 0;font-size:13px;color:var(--ink-2
 <template id="t-m0">
   <div class="eyebrow">Module 0</div>
   <h1>Setup</h1>
-  <div class="meta"><span class="chip">Under 1 hour</span><span class="chip">$500 credits + 2 free Time Scout reports</span></div>
   <div class="goal"><b>Goal:</b> an account with the right tools connected and a written scan scope, in under one hour. Signup includes $500 in credits and two full Time Scout reports, no card required.</div>
   <h2>Before you sign up</h2>
   <ul>
@@ -489,303 +599,96 @@ footer.small{max-width:760px;margin:48px auto 0;font-size:13px;color:var(--ink-2
   </div>
 </template>
 
+<template id="t-templates">
+  <span class="eyebrow">Toolkit</span>
+  <h1>Copy-ready messages</h1>
+  <p class="lede">Every message a rollout needs, in the order you'll send them. Your details from <a href="#plan">Your rollout plan</a> are filled in automatically. Highlighted brackets are still missing.</p>
+  <div id="tplList"></div>
+</template>
+
+<template id="t-buildlist">
+  <span class="eyebrow">Toolkit</span>
+  <h1>Build list</h1>
+  <p class="lede">The output of Module 2: the 1-3 agents you'll build first. Add one row per agent, then download it or print it for the executive sponsor to sign.</p>
+  <div class="card bl">
+    <div class="tablewrap" style="margin-top:0"><table>
+      <thead><tr><th>Agent name</th><th>Owner</th><th>Problem it solves</th><th>Hours saved / wk</th><th>Run cost / wk ($)</th><th>Rubric score</th><th>Review rule</th><th>Target live date</th><th class="no-print"></th></tr></thead>
+      <tbody id="blBody"></tbody>
+    </table></div>
+    <div class="navrow no-print" style="margin-top:14px;justify-content:flex-start">
+      <button class="btn small" id="blAdd">+ Add an agent</button>
+      <button class="btn ghost small" id="blCsv">Download as CSV</button>
+      <button class="btn ghost small" onclick="window.print()">Print for signature</button>
+    </div>
+    <div class="result" id="blSum"></div>
+    <p style="margin-top:28px">Approved by (executive sponsor): ______________________________ &nbsp; Date: ____________</p>
+  </div>
+  <div class="goal"><b>Rules of thumb:</b> start with 1-3 agents. Include one quick win that ships within two weeks. Every agent starts at review rule Level 1 (draft only) unless it's internal-only and has passed two clean weeks.</div>
+</template>
+
+<template id="t-glossary">
+  <span class="eyebrow">Reference</span>
+  <h1>Glossary</h1>
+  <p class="lede">Every term used in this course, in plain English.</p>
+  <dl class="glossary" id="glossList"></dl>
+</template>
+
+<template id="t-help">
+  <span class="eyebrow">Help</span>
+  <h1>Getting help</h1>
+  <p class="lede">Stuck? Here's who to ask, and how to manage your training progress.</p>
+  <div class="howto">
+    <div><b>Talk to Masterkey</b><span>Book a guided setup call or get started at <a href="https://masterkey.ai" target="_blank" rel="noopener">masterkey.ai</a>.</span></div>
+    <div><b>Data and privacy</b><span>To delete synced data or ask a privacy question, email <a href="mailto:privacy@masterkey.ai">privacy@masterkey.ai</a> or use Support in the app.</span></div>
+    <div><b>Inside your company</b><span>Your Masterkey admin owns the rollout. Champions run office hours for the first two weeks after launch.</span></div>
+  </div>
+  <h2>Your training data</h2>
+  <p>Your progress, answers and plan are saved in this browser on this device only. Nothing is sent anywhere. If you switch devices or clear your browser, you'll start fresh.</p>
+  <div class="navrow" style="justify-content:flex-start">
+    <a class="btn ghost small" href="#print">Print the full course</a>
+    <button class="btn ghost small" id="exportBtn">Download my progress</button>
+    <button class="btn ghost small" id="resetBtn">Reset all progress</button>
+  </div>
+  <div class="status" id="resetNote" aria-live="polite"></div>
+</template>
+
 <template id="t-cert">
-  <div class="eyebrow">Final step</div>
+  <span class="eyebrow">Final step</span>
   <h1>Admin certification</h1>
   <p class="lede">An admin is certified after completing all five exercises on their own company's data and scoring 8/10 or better on the final exam.</p>
   <h2>1. Exercises on your own data</h2>
   <div class="checklist" data-key="exercises">
-    <label><input type="checkbox">Write the business goal in one line with a number and a date</label>
-    <label><input type="checkbox">Connect the tools for one scoped workflow and document the scopes approved</label>
-    <label><input type="checkbox">Score every prescription in your first report with the rubric and produce the signed build list</label>
-    <label><input type="checkbox">Write 20 test cases for one agent, with pass criteria set before testing</label>
-    <label><input type="checkbox">Draft the go-live message and the rollback plan for that agent</label>
+    <label><input type="checkbox"><span class="t">Write the business goal in one line with a number and a date <a href="#plan">(use Your rollout plan)</a></span></label>
+    <label><input type="checkbox"><span class="t">Connect the tools for one scoped workflow and document the scopes approved</span></label>
+    <label><input type="checkbox"><span class="t">Score every prescription in your first report with the rubric and produce the signed <a href="#buildlist">build list</a></span></label>
+    <label><input type="checkbox"><span class="t">Write 20 test cases for one agent, with pass criteria set before testing <a href="#m3">(template in Module 3)</a></span></label>
+    <label><input type="checkbox"><span class="t">Draft the go-live message and the rollback plan for that agent <a href="#templates">(templates)</a></span></label>
   </div>
   <h2>2. Final exam</h2>
-  <p>Ten questions. Answer all of them, then submit. You need 8 correct to pass, and you can retake it.</p>
+  <p>Ten questions. Answer all of them, then submit. You need 8 correct to pass, and you can retake it as often as you like.</p>
   <div id="exam"></div>
-  <div class="navrow" style="margin-top:16px"><button class="btn" id="examSubmit">Submit exam</button><button class="btn ghost" id="examRetake" style="display:none">Retake exam</button></div>
-  <div class="status" id="examStatus"></div>
+  <div class="navrow" style="margin-top:16px;justify-content:flex-start"><button class="btn" id="examSubmit">Submit exam</button><button class="btn ghost" id="examRetake" style="display:none">Retake exam</button></div>
+  <div class="status" id="examStatus" aria-live="polite"></div>
   <div class="cert-wrap">
     <div class="cert" id="certificate">
-      <div class="seal">Masterkey Academy</div>
-      <div style="color:var(--ink-2);margin-top:18px">This certifies that</div>
+      <div class="band"><img src="assets/logo.svg" alt="masterkey" onerror="this.outerHTML='<b style=&quot;color:#fff&quot;>masterkey</b>'"></div>
+      <div style="color:#55545c;margin-top:28px">This certifies that</div>
       <div class="who" id="certName">—</div>
-      <div>has completed the Masterkey onboarding program and is certified as a</div>
-      <div style="font-weight:700;font-size:20px;margin:8px 0">Masterkey Admin</div>
-      <div style="color:var(--ink-2);font-size:14px" id="certMeta"></div>
-      <div class="no-print" style="margin-top:22px"><button class="btn" onclick="window.print()">Print or save as PDF</button></div>
+      <div>has completed Masterkey Academy and is certified as a</div>
+      <div class="title">Masterkey Admin</div>
+      <div style="color:#55545c;font-size:14px;margin-top:6px" id="certMeta"></div>
+      <div class="no-print" style="margin-top:22px"><button class="btn dark" onclick="window.print()">Print or save as PDF</button></div>
     </div>
   </div>
   <div class="status" id="certStatus"></div>
 </template>
 
-<footer class="small" id="foot" hidden>
+<footer class="site" id="foot" hidden>
+  <b>Masterkey Academy</b> · <a href="https://masterkey.ai" target="_blank" rel="noopener">masterkey.ai</a> · A Tony Robbins Company<br>
   Sources: <a href="https://masterkey.ai" target="_blank" rel="noopener">Masterkey.ai home page and FAQ</a> · <a href="https://masterkey.ai/privacy" target="_blank" rel="noopener">Masterkey privacy policy</a> · <a href="https://trailhead.salesforce.com/content/learn/modules/trusted-agentic-ai/explore-agentforce-guardrails-and-trust-patterns" target="_blank" rel="noopener">Agentforce guardrails (Trailhead)</a> · <a href="https://www.salesforceben.com/agentforce-testing-best-practices-how-to-ensure-reliable-deployments-in-salesforce/" target="_blank" rel="noopener">Agentforce testing best practices (Salesforce Ben)</a>.<br>
-  Scoring rubric, autonomy levels, KPI targets and the 90-day plan are recommended practice, not Masterkey product features.
+  The scoring rubric, autonomy levels, KPI targets and 90-day plan are recommended practice, not Masterkey product features.
 </footer>
 
-<script>
-(() => {
-// ---------- data ----------
-const LESSONS = [
-  {id:'welcome', group:'Start', title:'Welcome', tpl:'t-welcome', quiz:[
-    {q:'What is the first step in the Masterkey loop?', o:['Deploy an agent to Agentforce','Diagnose: connect tools so Time Scout maps repeated busywork','Write test cases','Hire a champion'], a:1, why:'The loop is Diagnose → Prescribe → Deploy → Adopt + measure, then re-scan.'},
-    {q:'What does the second free Time Scout scan do?', o:['Replaces the first report','Confirms the savings and finds the next wave','Deploys agents automatically','Nothing; only one scan is free'], a:1, why:'Keep the second report for a re-scan after agents go live.'}
-  ]},
-  {id:'roles', group:'Start', title:'Who this is for', tpl:'t-roles', quiz:[
-    {q:'Who owns the goal, the budget and the final go/no-go on each agent?', o:['Masterkey admin','Champion','Executive sponsor','Salesforce admin'], a:2, why:'The executive sponsor owns the goal (hours to win back), budget and go/no-go.'},
-    {q:'How many champions should you have?', o:['One per company','One per 10 users','One per team lead','One per agent'], a:1, why:'One respected doer per 10 users.'},
-    {q:'When must every role be assigned by name?', o:['Before Module 0 starts','After the first report','At go-live','At day 30'], a:0, why:'Assign every role by name before Module 0 starts.'}
-  ]},
-  {id:'m0', group:'Modules', title:'Module 0 — Setup', tpl:'t-m0', quiz:[
-    {q:'Which is a valid business goal?', o:['Grow efficiency with AI','Use Masterkey across the company','Win back 15 hours a week across the sales team by January 31','Make the team happier'], a:2, why:'One line, with a number and a date. No number, no rollout.'},
-    {q:'What should your first scan scope be?', o:['The whole company','One team or one workflow','Only the CEO\'s inbox','Every connected tool'], a:1, why:'A whole-company first scan produces a long report nobody owns.'},
-    {q:'You disconnected a source. What happens to data already synced?', o:['It is deleted automatically','It stays until you request deletion (privacy@masterkey.ai or Support) or delete the account','It is shared with AI vendors','It expires in 24 hours'], a:1, why:'Disconnecting stops new reads only; ask for deletion of the synced copy.'}
-  ]},
-  {id:'m1', group:'Modules', title:'Module 1 — Running your scan', tpl:'t-m1', quiz:[
-    {q:'What should you capture while the scan runs?', o:['A manual baseline of weekly hours from each person in scope','Screenshots of the app','Agentforce credits','A list of new tools to buy'], a:0, why:'The baseline is the number you test the report against, and how you prove ROI later.'},
-    {q:'The report reflects only one person\'s habits. Most likely cause?', o:['Scan ran too long','Only the owner\'s inbox was connected','Too many tools connected','The meeting recorder was included'], a:1, why:'Add the team members in scope.'}
-  ]},
-  {id:'m2', group:'Modules', title:'Module 2 — Reading the report', tpl:'t-m2', quiz:[
-    {q:'A prescription scores 4 × 5 × 5 × 4 × 5. What do you do?', o:['Park it','Second wave','Build now','Never automate'], a:2, why:'4×5×5×4×5 = 2,000, well above 500: build now.'},
-    {q:'A prescription scores 1 on error cost. What do you do?', o:['Fully automate it to save the most time','Build it as draft-for-human-approval only, or park it','Deploy straight to production','Raise it to level 3'], a:1, why:'Rule clarity or error cost at 1 = never fully automate.'},
-    {q:'Which is a good first agent?', o:['Auto-approving refunds','Pricing quotes sent directly to customers','Drafting follow-up emails after meetings','Signing contracts'], a:2, why:'Bad first agents send money, sign, price, or talk to customers without review.'}
-  ]},
-  {id:'m3', group:'Modules', title:'Module 3 — Deploying an agent', tpl:'t-m3', quiz:[
-    {q:'Where does a new agent go first?', o:['Production','Sandbox','A pilot with the whole team','Straight to customers'], a:1, why:'Never one-click straight into production on the first agent.'},
-    {q:'What mix of test cases should you build?', o:['100% normal cases','50% normal, 50% edge','About 70% normal, 20% edge, 10% must-refuse or escalate','Only edge cases'], a:2, why:'20-30 real cases: 70 / 20 / 10.'},
-    {q:'When do you set pass criteria?', o:['After testing, based on results','Before testing','At go-live','Never; just eyeball it'], a:1, why:'Set them first, e.g. 90%+ normal, 100% escalation, zero data-permission leaks.'}
-  ]},
-  {id:'m4', group:'Modules', title:'Module 4 — Adoption', tpl:'t-m4', quiz:[
-    {q:'What are the three reasons adoption fails?', o:['Price, speed, design','Fear for jobs, distrust of output, the old way is easier','Bad Wi-Fi, too many tools, no training','Legal, IT, finance'], a:1, why:'Each needs its own fix: say what the hours are for, start in draft mode, make the agent the easy path.'},
-    {q:'How long is the end-user training?', o:['10 minutes','45 minutes','Half a day','Two days'], a:1, why:'5 min scope, 10 min demo, 20 min hands-on, 10 min review/correct/flag.'},
-    {q:'A user flags a bad output. How fast should you answer?', o:['Within one business day','Within a month','At the day-30 review','No need to answer'], a:0, why:'Answer each flag within one business day; trust follows visible accuracy.'}
-  ]},
-  {id:'rollout', group:'Plan & measure', title:'The 90-day rollout', tpl:'t-rollout', quiz:[
-    {q:'What gate must pass before Build + pilot begins?', o:['70% of forecast','Tests pass','Build list signed','Second scan done'], a:2, why:'Gate 1 is the sponsor-signed build list.'},
-    {q:'A gate is missed. What happens?', o:['Skip it and keep going','Fix and retry','Cancel the rollout','Move to level 3 autonomy'], a:1, why:'A missed gate means fix and retry, not skip.'}
-  ]},
-  {id:'measure', group:'Plan & measure', title:'Measuring success', tpl:'t-measure', quiz:[
-    {q:'What is the one number that decides success?', o:['Number of agents deployed','Hours won back per week vs. baseline','Logins per day','Credits used'], a:1, why:'Everything else explains that number.'},
-    {q:'An agent is at 40% of forecast hours on day 30. What happens?', o:['Leave it; it will improve','Raise its autonomy','Fix it or switch it off','Deploy two more like it'], a:2, why:'Under 50% of forecast at day 30 = fix it or switch it off.'},
-    {q:'15 hrs/week × $60 loaded cost − $150 run cost =', o:['$750 a week','$900 a week','$600 a week','$1,050 a week'], a:0, why:'$900 of time − $150 run cost = $750 a week, about $39,000 a year.'}
-  ]},
-  {id:'gov', group:'Plan & measure', title:'Governance & risk', tpl:'t-gov', quiz:[
-    {q:'What autonomy level does every new customer-facing agent start at?', o:['Level 1 — Suggest','Level 2 — Act with review','Level 3 — Act alone','No level needed'], a:0, why:'All new agents and anything customer-facing start at level 1.'},
-    {q:'Which can NEVER be level 3?', o:['Creating tasks from meeting notes','Updating a CRM field','Payments and pricing','Summarizing a meeting'], a:2, why:'Never level 3: payments, pricing, contracts, legal or medical statements, hiring, deleting records.'}
-  ]},
-  {id:'trouble', group:'Reference', title:'Troubleshooting & FAQ', tpl:'t-trouble', quiz:[
-    {q:'The agent keeps picking the wrong action. First fix?', o:['Buy more credits','Rewrite instructions as Always / Never / If X then Y and split overlapping topics, then re-test','Raise to level 3','Disconnect Salesforce'], a:1, why:'Vague or overlapping instructions are the usual cause.'},
-    {q:'Do you need Agentforce to get a Time Scout report?', o:['Yes','No; only to one-click deploy'], a:1, why:'Diagnose and Prescribe work alone.'}
-  ]},
-  {id:'cert', group:'Certify', title:'Admin certification', tpl:'t-cert', quiz:null}
-];
-const EXAM = [
-  {q:'What should your first scan cover?', o:['The whole company','One team or one workflow','Only leadership','Every connected app'], a:1},
-  {q:'What must you capture before reading the first report?', o:['A manual baseline, to prove ROI later','A SOC 2 report','A Salesforce sandbox','Pricing approval'], a:0},
-  {q:'Name the three Masterkey steps.', o:['Scan, Score, Ship','Diagnose, Prescribe, Deploy','Connect, Test, Launch','Plan, Build, Measure'], a:1},
-  {q:'Do you need Agentforce to get a report?', o:['Yes, always','No; only to one-click deploy','Only for sales teams','Only after day 30'], a:1},
-  {q:'A prescription scores 1 on error cost. What do you do?', o:['Automate fully','Build it as draft-for-approval only, or park it','Deploy to production first','Ignore the score'], a:1},
-  {q:'Where does a new agent go first?', o:['Production','Sandbox','Customer pilot','Level 3'], a:1},
-  {q:'What mix of test cases?', o:['70% normal, 20% edge, 10% must-refuse or escalate','100% normal','50/50 normal and edge','90% edge, 10% normal'], a:0},
-  {q:'What autonomy level does every new customer-facing agent start at?', o:['Level 3, Act alone','Level 2, Act with review','Level 1, Suggest','It depends on the vendor'], a:2},
-  {q:'An agent is at 40% of forecast hours on day 30. What happens?', o:['Wait until day 90','Fix it or switch it off','Raise its autonomy','Double its scope'], a:1},
-  {q:'How do you remove data Masterkey already synced from one source?', o:['Disconnecting deletes it','Email privacy@masterkey.ai or use Support in the app','It cannot be removed','Change your password'], a:1}
-];
-const ROLES = [
-  {id:'sponsor', name:'Executive sponsor', who:'Owner, CEO, GM · 2 hours', req:['welcome','roles','m0','m2','m4','rollout','measure']},
-  {id:'admin', name:'Masterkey admin', who:'Chief of staff, ops lead · 6 hours', req:LESSONS.map(l=>l.id)},
-  {id:'owner', name:'Process owner', who:'Department head · 3 hours', req:['welcome','roles','m1','m2','m3','m4']},
-  {id:'sfadmin', name:'Salesforce admin', who:'In-house or partner · 4 hours', req:['welcome','roles','m3','gov']},
-  {id:'champion', name:'Champion', who:'1 per 10 users · 2 hours', req:['welcome','roles','m2','m4','trouble']},
-  {id:'user', name:'End user', who:'Uses the agent · 45 minutes', req:['welcome','m4','trouble']}
-];
-
-// ---------- state ----------
-const KEY='mk-academy-v1';
-let S={done:{}, role:null, name:'', checks:{}, exam:null, answers:{}};
-try{ const raw=localStorage.getItem(KEY); if(raw) S=Object.assign(S,JSON.parse(raw)); }catch(e){}
-const save=()=>{ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} };
-
-// theme
-const themeBtn=document.getElementById('themeBtn');
-try{ const t=localStorage.getItem('mk-theme'); if(t) document.documentElement.dataset.theme=t; }catch(e){}
-themeBtn.onclick=()=>{ const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches; const n=dark?'light':'dark'; document.documentElement.dataset.theme=n; try{localStorage.setItem('mk-theme',n);}catch(e){} };
-
-const side=document.getElementById('side'), main=document.getElementById('main'), overlay=document.getElementById('overlay');
-document.getElementById('menuBtn').onclick=()=>{side.classList.toggle('open');overlay.classList.toggle('open');};
-overlay.onclick=()=>{side.classList.remove('open');overlay.classList.remove('open');};
-
-const reqSet=()=>{ const r=ROLES.find(r=>r.id===S.role); return r?new Set(r.req):null; };
-const trackLessons=()=>{ const rs=reqSet(); return LESSONS.filter(l=>!rs||rs.has(l.id)); };
-
-function renderNav(cur){
-  const rs=reqSet(); let html='', g='';
-  LESSONS.forEach(l=>{
-    if(l.group!==g){ g=l.group; html+=`<h4>${g}</h4>`; }
-    html+=`<a href="#${l.id}" class="${l.id===cur?'active':''}"><span class="dot ${S.done[l.id]?'done':''}">✓</span><span>${l.title}</span>${rs&&rs.has(l.id)&&S.role!=='admin'?'<span class="req">REQ</span>':''}</a>`;
-  });
-  side.innerHTML=html;
-  const tl=trackLessons(), n=tl.filter(l=>S.done[l.id]).length, pct=Math.round(100*n/tl.length);
-  document.getElementById('pLabel').textContent=`${n} of ${tl.length} ${S.role&&S.role!=='admin'?'required ':''}lessons`;
-  document.getElementById('pFill').style.width=pct+'%';
-  document.getElementById('pPct').textContent=pct+'%';
-}
-
-function quizHTML(qs, prefix){
-  return qs.map((q,i)=>`<div class="q" data-i="${i}"><p>${i+1}. ${q.q}</p>${q.o.map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}${q.why?`<div class="why"></div>`:''}</div>`).join('');
-}
-
-function render(){
-  const id=(location.hash||'#welcome').slice(1);
-  const idx=Math.max(0,LESSONS.findIndex(l=>l.id===id));
-  const L=LESSONS[idx];
-  side.classList.remove('open'); overlay.classList.remove('open');
-  renderNav(L.id);
-  const wrap=document.createElement('div'); wrap.className='lesson';
-  wrap.appendChild(document.getElementById(L.tpl).content.cloneNode(true));
-  // lesson quiz
-  if(L.quiz){
-    const qz=document.createElement('section'); qz.className='quiz';
-    qz.innerHTML=`<div class="eyebrow">Check your understanding</div><h2 style="margin-top:6px">${L.quiz.length} quick questions</h2><p style="color:var(--ink-2)">Answer all correctly to complete this lesson. Wrong answers show why; pick again.</p>${quizHTML(L.quiz)}<div class="status" id="qStatus"></div>`;
-    wrap.appendChild(qz);
-    const ok=new Set();
-    const already=!!S.done[L.id];
-    qz.querySelectorAll('.q').forEach(qEl=>{
-      const q=L.quiz[+qEl.dataset.i];
-      const mark=(j)=>{
-        const btn=qEl.querySelector(`.opt[data-j="${j}"]`);
-        const why=qEl.querySelector('.why');
-        if(j===q.a){ btn.classList.add('right'); qEl.querySelectorAll('.opt').forEach(b=>b.disabled=true); ok.add(qEl.dataset.i); if(why) why.textContent='Correct. '+q.why; }
-        else { btn.classList.add('wrong'); btn.disabled=true; if(why) why.textContent='Not quite. Try again.'; }
-        qEl.classList.add('answered');
-      };
-      if(already) mark(q.a);
-      qEl.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ mark(+b.dataset.j); check(); });
-    });
-    const check=()=>{
-      const st=qz.querySelector('#qStatus');
-      if(ok.size===L.quiz.length){ if(!S.done[L.id]){S.done[L.id]=Date.now();save();renderNav(L.id);} st.innerHTML='<b style="color:var(--good)">✓ Lesson complete.</b>'; }
-      else st.textContent=`${ok.size} of ${L.quiz.length} correct`;
-    };
-    check();
-  }
-  // nav buttons
-  const nr=document.createElement('div'); nr.className='navrow';
-  const prev=LESSONS[idx-1], next=LESSONS[idx+1];
-  nr.innerHTML=`${prev?`<a class="btn ghost" style="text-decoration:none" href="#${prev.id}">← ${prev.title}</a>`:'<span></span>'}${next?`<a class="btn" style="text-decoration:none" href="#${next.id}">${next.title} →</a>`:''}`;
-  wrap.appendChild(nr);
-  const foot=document.getElementById('foot').cloneNode(true); foot.hidden=false; foot.id=''; wrap.appendChild(foot);
-  main.innerHTML=''; main.appendChild(wrap);
-  window.scrollTo(0,0);
-  wire(L.id, wrap);
-}
-
-function wire(id, root){
-  // checklists
-  root.querySelectorAll('.checklist').forEach(cl=>{
-    const k=cl.dataset.key; S.checks[k]=S.checks[k]||[];
-    cl.querySelectorAll('input').forEach((inp,i)=>{
-      inp.checked=!!S.checks[k][i];
-      inp.onchange=()=>{ S.checks[k][i]=inp.checked; save(); if(id==='cert') certCheck(); };
-    });
-  });
-  if(id==='welcome'){
-    const ni=root.querySelector('#nameIn'); ni.value=S.name||''; ni.oninput=()=>{S.name=ni.value.trim();save();};
-    const rd=root.querySelector('#roles');
-    const draw=()=>{ rd.innerHTML=ROLES.map(r=>`<button class="role ${S.role===r.id?'sel':''}" data-id="${r.id}"><b>${r.name}</b><small>${r.who}</small></button>`).join('');
-      rd.querySelectorAll('.role').forEach(b=>b.onclick=()=>{S.role=b.dataset.id;save();draw();renderNav('welcome');});
-      const r=ROLES.find(r=>r.id===S.role);
-      root.querySelector('#roleNote').textContent = r ? `${r.name}: ${r.req.length} lesson${r.req.length>1?'s':''} in your track${r.id==='admin'?' (all of them, plus certification)':''}. Required lessons are marked REQ in the menu.` : 'Pick a role to see your required lessons. You can change it any time.';
-    };
-    draw();
-  }
-  if(id==='m2'){
-    const F=[['Hours saved','10+ hrs/wk','<1 hr/wk'],['Frequency','Many times a day','Monthly'],['Rule clarity','Checklist-simple','Judgment every time'],['Error cost','Cheap to undo','Reaches customer/money/legal'],['Owner ready','Named, wants it now','No owner']];
-    const v=S.rubric||[4,5,4,4,5];
-    const rows=root.querySelector('#rubricRows');
-    rows.innerHTML=F.map((f,i)=>`<div class="row"><span title="5 = ${f[1]} · 1 = ${f[2]}">${f[0]}</span><input type="range" min="1" max="5" value="${v[i]}" data-i="${i}" aria-label="${f[0]}"><span class="val">${v[i]}</span></div>`).join('');
-    const out=root.querySelector('#rubricOut');
-    const calc=()=>{
-      const s=v.reduce((a,b)=>a*b,1);
-      let verdict = s>=500?['Build now','v-good']: s>=150?['Second wave','v-mid']:['Park it','v-bad'];
-      let extra = (v[2]===1||v[3]===1)?'<div style="margin-top:8px;font-size:14px"><b>Rule clarity or error cost is 1:</b> never fully automate. Design it as a draft-for-human-approval agent.</div>':'';
-      out.innerHTML=`<span class="big">${s.toLocaleString()}</span><span class="verdict ${verdict[1]}">${verdict[0]}</span><div style="font-size:13px;color:var(--ink-2);margin-top:4px">${v.join(' × ')} · 500+ build now · 150-499 second wave · under 150 park</div>${extra}`;
-    };
-    rows.querySelectorAll('input').forEach(inp=>inp.oninput=()=>{v[+inp.dataset.i]=+inp.value;inp.nextElementSibling.textContent=inp.value;S.rubric=v;save();calc();});
-    calc();
-  }
-  if(id==='m3'){
-    const n=root.querySelector('#tcN'), out=root.querySelector('#tcOut'), vv=root.querySelector('#tcV');
-    const calc=()=>{ const N=+n.value; vv.textContent=N; const e=Math.round(N*.2), r=Math.max(2,Math.round(N*.1)), norm=N-e-r;
-      out.innerHTML=`<b>${norm}</b> normal cases · <b>${e}</b> edge cases · <b>${r}</b> must refuse or escalate<div style="font-size:14px;color:var(--ink-2);margin-top:6px">Pass bar: ${Math.ceil(norm*.9)}+ of ${norm} normal correct (90%), ${r} of ${r} escalations correct (100%), zero data-permission leaks. Then the process owner runs 10 by hand.</div>`; };
-    n.oninput=calc; calc();
-  }
-  if(id==='measure'){
-    const ids=['rForecast','rHours','rCost','rRun'], el=ids.map(i=>root.querySelector('#'+i)), out=root.querySelector('#roiOut');
-    if(S.roi) el.forEach((e,i)=>e.value=S.roi[i]);
-    const fmt=n=>(n<0?'−$':'$')+Math.abs(Math.round(n)).toLocaleString();
-    const calc=()=>{ const [f,h,c,r]=el.map(e=>+e.value||0); S.roi=[f,h,c,r]; save();
-      const wk=h*c-r, pct=f?Math.round(100*h/f):0;
-      const v = pct<50?['Under 50% at day 30: fix it or switch it off','v-bad']: pct<70?['On watch: below the 70% day-90 target','v-mid']:['On track: 70%+ of forecast','v-good'];
-      out.innerHTML=`<div><span class="big">${fmt(wk)}</span> <span style="color:var(--ink-2)">per week · about ${fmt(wk*52)} a year</span></div><div style="margin-top:8px">${pct}% of forecast hours <span class="verdict ${v[1]}">${v[0]}</span></div>`; };
-    el.forEach(e=>e.oninput=calc); calc();
-  }
-  if(id==='cert') wireExam(root);
-}
-
-function wireExam(root){
-  const ex=root.querySelector('#exam');
-  ex.innerHTML=quizHTML(EXAM);
-  const sel=S.answers||{};
-  const paint=(graded)=>{
-    ex.querySelectorAll('.q').forEach(qEl=>{
-      const i=qEl.dataset.i;
-      qEl.querySelectorAll('.opt').forEach(b=>{
-        b.classList.remove('right','wrong'); b.style.borderColor=''; b.style.background='';
-        const j=+b.dataset.j;
-        if(graded){ b.disabled=true; if(j===EXAM[i].a) b.classList.add('right'); else if(sel[i]===j) b.classList.add('wrong'); }
-        else { b.disabled=false; if(sel[i]===j){ b.style.borderColor='var(--accent)'; b.style.background='var(--accent-soft)'; } else b.style.background=''; }
-      });
-    });
-  };
-  const graded=()=>S.exam!==null && S.exam!==undefined;
-  ex.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ if(graded()) return; const i=b.closest('.q').dataset.i; sel[i]=+b.dataset.j; S.answers=sel; save(); paint(false); });
-  const sub=root.querySelector('#examSubmit'), ret=root.querySelector('#examRetake'), st=root.querySelector('#examStatus');
-  const show=()=>{
-    if(graded()){ paint(true); sub.style.display='none'; ret.style.display='';
-      st.innerHTML = S.exam>=8 ? `<b style="color:var(--good)">Passed: ${S.exam}/10.</b>` : `<b style="color:var(--bad)">${S.exam}/10. You need 8 to pass.</b> Review the lessons and retake.`; }
-    else { paint(false); sub.style.display=''; ret.style.display='none'; st.textContent=`${Object.keys(sel).length} of 10 answered`; }
-    certCheck();
-  };
-  sub.onclick=()=>{ if(Object.keys(sel).length<10){ st.textContent=`Answer all 10 first (${Object.keys(sel).length} of 10 answered).`; return; }
-    S.exam=EXAM.reduce((n,q,i)=>n+(sel[i]===q.a?1:0),0); if(S.exam>=8) S.certDate=S.certDate||Date.now(); save(); show(); };
-  ret.onclick=()=>{ S.exam=null; S.answers={}; for(const k in sel) delete sel[k]; save(); show(); };
-  show();
-}
-
-function certCheck(){
-  const ex=(S.checks.exercises||[]); const exDone=[0,1,2,3,4].every(i=>ex[i]);
-  const passed=S.exam>=8;
-  const c=document.getElementById('certificate'), st=document.getElementById('certStatus');
-  if(!c) return;
-  if(passed && exDone){
-    if(!S.done.cert){ S.done.cert=Date.now(); save(); renderNav('cert'); }
-    c.classList.add('show');
-    document.getElementById('certName').textContent=S.name||'Your name here';
-    document.getElementById('certMeta').textContent=`Final exam ${S.exam}/10 · ${new Date(S.certDate||Date.now()).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'})}`;
-    st.innerHTML = S.name? '' : 'Add your name on the <a href="#welcome">Welcome</a> page to print it on the certificate.';
-  } else {
-    c.classList.remove('show');
-    const left=[]; if(!exDone) left.push(`${5-[0,1,2,3,4].filter(i=>ex[i]).length} exercise(s)`); if(!passed) left.push('a passing exam score (8/10)');
-    st.textContent='Certificate unlocks after: '+left.join(' and ')+'.';
-  }
-}
-
-window.addEventListener('hashchange',render);
-render();
-})();
-</script>
+<script src="app.js"></script>
 </body>
 </html>
